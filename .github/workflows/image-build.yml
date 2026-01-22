@@ -1,9 +1,13 @@
 name: Build Docker Image
 
-on:
-  push:
-    branches:
-      - main
+on: [push]
+
+vars:
+  DOCKERHUB_USERNAME: ${{secrets.DOCKERHUB_USERNAME}} 
+  DOCKERHUB_PASSWORD: ${{secrets.DOCKERHUB_PASSWORD}}
+  IMAGE_NAME: demo-image-test
+  IMAGE_TAG: latest
+  IMAGE_FULL_NAME: ${{ vars.DOCKERHUB_USERNAME }}/${{ vars.IMAGE_NAME }}:${{ vars.IMAGE_TAG }}
 
 jobs:
     build:
@@ -16,17 +20,16 @@ jobs:
         - name: login to docker hub
           id: docker-hub
           env:
-            username: ${{secrets.DOCKERHUB_USERNAME}}
-            password: ${{secrets.DOCKERHUB_PASSWORD}}
-          run: |
-            docker login -u $username -p $password 
+            username: ${{ vars.DOCKERHUB_USERNAME }}
+            password: ${{ vars.DOCKERHUB_PASSWORD }}
+          run: docker login -u $username -p $password 
         
         - name: build the docker image
           id: build-docker-image
           run: |
             ls -la 
-            docker build . -f Dockerfile -t asmabouzidi/demo-image-test:latest
+            docker build -t ${{ vars.IMAGE_FULL_NAME }} .
         
         - name: push the docker image
           id: push-docker-image
-          run: docker push ${{secrets.DOCKERHUB_USERNAME}}/demo-image-test:latest
+          run: docker push ${{ vars.IMAGE_FULL_NAME }}
