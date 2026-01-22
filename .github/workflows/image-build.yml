@@ -7,7 +7,7 @@ env:
   DOCKERHUB_PASSWORD: ${{secrets.DOCKERHUB_PASSWORD}}
   IMAGE_NAME: demo-image-test
   IMAGE_TAG: latest
-  IMAGE_FULL_NAME: ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+  IMAGE_FULL_NAME: ${{ DOCKERHUB_USERNAME }}/${{ IMAGE_NAME }}:${{ IMAGE_TAG }}
 
 jobs:
     build:
